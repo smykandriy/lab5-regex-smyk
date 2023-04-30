@@ -14,12 +14,13 @@ class GithubNameFinderTest {
     private String githubInfo;
     private GithubNameFinder nameFinder = new GithubNameFinder();
     private List<String> users;
+    Reader reader = new Reader();
 
     public void generateUsersList(String text) {
         InputStream in = new ByteArrayInputStream(text.getBytes());
         System.setIn(in);
 
-        githubInfo = Reader.readFromConsole();
+        githubInfo = reader.readFromConsole();
 
         users = nameFinder.findGithubUsers(githubInfo);
     }
