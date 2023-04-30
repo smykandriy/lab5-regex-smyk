@@ -8,6 +8,7 @@ import java.io.InputStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ReaderTest {
+    Reader reader = new Reader();
 
     @Test
     void testReadFromConsole() {
@@ -15,7 +16,7 @@ class ReaderTest {
         InputStream in = new ByteArrayInputStream(expected.getBytes());
         System.setIn(in);
 
-        String actual = Reader.readFromConsole();
+        String actual = reader.readFromConsole();
         assertEquals(expected, actual);
     }
 }
