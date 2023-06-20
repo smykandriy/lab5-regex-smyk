@@ -1,43 +1,52 @@
 package ua.lviv.iot.algo.part1.lab5;
 
 import org.junit.jupiter.api.Test;
-import ua.lviv.iot.algo.part1.lab5.readers.Reader;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 class GithubNameFinderTest {
-    private String githubInfo;
-    private GithubNameFinder nameFinder = new GithubNameFinder();
-    private List<String> users;
-    Reader reader = new Reader();
-
-    public void generateUsersList(String text) {
-        InputStream in = new ByteArrayInputStream(text.getBytes());
-        System.setIn(in);
-
-        githubInfo = reader.readFromConsole();
-
-        users = nameFinder.findGithubUsers(githubInfo);
-    }
+    private final GithubNameFinder nameFinder = new GithubNameFinder();
+    private List<String> githubLinks;
 
     @Test
     void testFindGithubUsersIsAbsent() {
         String text = "text to test input from console";
-        generateUsersList(text);
-        assertEquals(0, users.size());
+        githubLinks = nameFinder.findGithubUsers(text);
+        assertEquals(0, githubLinks.size());
     }
 
     @Test
+    void testFindGithubCom() {
+        String text = "https://github.com/";
+        githubLinks = nameFinder.findGithubUsers(text);
+        assertEquals(0, githubLinks.size());
+    }
+
+    @Test
+    void testNonGithubLink() {
+        String text = "https://dsjbjdsbjdgithub.com/";
+        githubLinks = nameFinder.findGithubUsers(text);
+        assertEquals(0, githubLinks.size());
+    }
+
+
+    @Test
     void testFindGithubUsersAtTheStart() {
+
+
+
         String text = "https://github.com/OleksiuDatsko/wombat/pull/1/ "
                 + "approve this pull request";
-        generateUsersList(text);
-        assertEquals(1, users.size());
+        githubLinks = nameFinder.findGithubUsers(text);
+
+        List<String> actualUsers = new LinkedList<>();
+        actualUsers.add("OleksiuDatsko");
+        assertEquals(1, githubLinks.size());
+        assertEquals(actualUsers, githubLinks);
     }
 
     @Test
@@ -45,8 +54,11 @@ class GithubNameFinderTest {
         String text = "approve this pull request "
                 + "Link: https://github.com/OleksiuDatsko/wombat/pull/1/ "
                 + "thanks for your attention";
-        generateUsersList(text);
-        assertEquals(1, users.size());
+        githubLinks = nameFinder.findGithubUsers(text);
+        List<String> actualUsers = new LinkedList<>();
+        actualUsers.add("OleksiuDatsko");
+        assertEquals(1, githubLinks.size());
+        assertEquals(actualUsers, githubLinks);
     }
 
     @Test
@@ -54,18 +66,30 @@ class GithubNameFinderTest {
         String text = "can you approve this pull request?"
                 + "thanks for your attention "
                 + "Link: https://github.com/OleksiuDatsko/wombat/pull/1/ ";
-        generateUsersList(text);
-        assertEquals(1, users.size());
+        githubLinks = nameFinder.findGithubUsers(text);
+        List<String> actualUsers = new LinkedList<>();
+        actualUsers.add("OleksiuDatsko");
+        assertEquals(1, githubLinks.size());
+        assertEquals(actualUsers, githubLinks);
     }
 
     @Test
     void testFindMultipleGithubUsers() {
+
         String text = "https://github.com/smykandriy/wombase/pull/12/ "
                 + "https://github.com/MarkoYaminsky/recipe-app/pull/6/ "
                 + "https://github.com/OleksiuDatsko/java-labs-2023/pull/4/ "
-                + "https://github.com/Sashko-Sobran/smart-sashko/pull/1/ "
-                + "thanks for your attention";
-        generateUsersList(text);
-        assertEquals(4, users.size());
+                + "https://github1.com/user1/wombase/pull/12/" + "thanks for your attention";
+        githubLinks = nameFinder.findGithubUsers(text);
+
+        List<String> actualUsers = new LinkedList<>();
+        actualUsers.add("smykandriy");
+        actualUsers.add("MarkoYaminsky");
+        actualUsers.add("OleksiuDatsko");
+
+        assertEquals(3, githubLinks.size());
+        assertEquals(actualUsers, githubLinks);
     }
+
+
 }

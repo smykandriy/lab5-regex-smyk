@@ -1,23 +1,23 @@
 package ua.lviv.iot.algo.part1.lab5;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GithubNameFinder {
 
-    public List<String> findGithubUsers(String text) {
-        List<String> users = new ArrayList<>();
+    public static final Pattern GITHUB_LINK_PATTERN = Pattern.compile("(http(s)?:\\/\\/)?github\\.com\\/(\\w+)(\\S)?");
 
-        Pattern pattern = Pattern.compile("(https://)?github\\.com/([^/]+)/");
-        Matcher matcher = pattern.matcher(text);
+    public List<String> findGithubUsers(String text) {
+        List<String> githubUsers = new LinkedList<>();
+
+        Matcher matcher = GITHUB_LINK_PATTERN.matcher(text);
 
         while (matcher.find()) {
-            users.add(matcher.group(2));
+            githubUsers.add(matcher.group(3));
         }
 
-        return users;
+        return githubUsers;
     }
 }
